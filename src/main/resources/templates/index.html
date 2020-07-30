@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>今日校园自动签到</title>
+    <th:block th:replace="model/head :: head"></th:block>
+    <style>
+        .m-row{
+            height: 100vh;
+            align-items: center;
+        }
+        .center-form{
+            background: rgba(0,0,0,0.3);
+        }
+        .m-tips{
+            height: 100px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid bg-dark align-items-center">
+        <div class="row m-row justify-content-center align-items-center">
+            <div class="col-sm-3 col-12 center-form text-white">
+                <form action="/scitcLogin" method="post">
+                    <h3 class="form-signin-heading text-center text-white">SCITC</h3>
+                    <h3 class="form-signin-heading text-center pb-4 text-white">今日校园自动签到</h3>
+
+                    <p class="text-danger text-center w-100 tips" th:text="${msg}"></p>
+
+                    <div class="col-auto p-2">
+                        <label class="sr-only" for="inlineFormInputGroup_usernmae">username</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">学号</div>
+                            </div>
+                            <input type="text" class="form-control" name="username" required  id="inlineFormInputGroup_usernmae" placeholder="学号">
+                        </div>
+                    </div>
+
+                    <div class="col-auto p-2">
+                        <label class="sr-only" for="inlineFormInputGroup_password">password</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">密码</div>
+                            </div>
+                            <input type="password" class="form-control" name="password" required  id="inlineFormInputGroup_password" placeholder="身份证后6位">
+                        </div>
+                    </div>
+
+                    <div class="col-auto p-2">
+                        <button type="submit" onclick="addStyle()" class="btn btn-primary mb-2 w-100">验证</button>
+                    </div>
+
+                    <div class="col-auto">
+                        <small class="text-info">
+                            注意：当前页面只支持川信的学生登录，川信默认的账号是学号，密码是身份证后6位.第一次登陆会非常的慢哦！！！耐心点
+                        </small>
+                    </div>
+                </form>
+                <div class="col-12">
+                    <div class="m-tips">
+                        <p class="text-warning text-center" th:utext="${tips}"></p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12">
+                <div class="row justify-content-center align-items-center text-white">
+                    <p>如果发现一直登陆不上点<a href="http://authserver.scitc.com.cn/authserver/login?service=https%3A%2F%2Fscitc.cpdaily.com%2Fportal%2Flogin">这个链接</a>进去登陆一次，然后回到这个界面再次登陆就可以了</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+    function addStyle() {
+        $(".tips").append("<p>如果你是第一次登陆那么要等一段时间让服务器进行验证</p>");
+        $(".tips").append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw" aria-hidden="true"></i>');
+    }
+</script>
+</body>
+</html>

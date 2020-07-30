@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>提示</title>
+    <th:block th:replace="model/head :: head"></th:block>
+</head>
+<body>
+<p th:text="${msg}" hidden=""></p>
+<p th:text="${url}" hidden=""></p>
+<script>
+    window.onload = function () {
+        var text = $("p:first").text();
+        alert(text);
+        var url = $("p:last").text();
+        window.location.href=url;
+    }
+</script>
+</body>
+</html>

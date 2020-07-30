@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户信息</title>
+    <th:block th:replace="model/head :: head"></th:block>
+</head>
+<style>
+    body{
+        height: 100vh;
+    }
+    .m-row{
+        height: 100vh;
+    }
+    .center-form{
+        color: white;
+        background: rgba(0,0,0,0.3);
+    }
+    #home,#info{
+        height: 400px;
+    }
+    #mtable{
+        color: white;
+    }
+    .log-content{
+        height: 400px;
+        overflow: auto;
+    }
+    .tab-content{
+        height: 400px;
+        overflow: auto;
+    }
+
+
+</style>
+<body>
+    <div class="container-fluid bg-dark">
+        <div class="row m-row justify-content-center align-items-center">
+            <div class="col-md-5 col-12 center-form">
+
+                <!--导航栏-->
+                <ul class="nav nav-tabs" role="tablist" id="mytable">
+                    <li class="nav-item" onclick="update_controller()">
+                        <a class="nav-link active" id="info-table" href="#home" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">信息</a>
+                    </li>
+                    <li class="nav-item" onclick="info_get()">
+                        <a class="nav-link" id="log-table" href="#info" data-toggle="tab" role="tab" aria-controls="log-table" aria-selected="false">签到日志</a>
+                    </li>
+                </ul>
+
+
+                <!--列表相应的内容-->
+                <div class="tab-content" id="myTabContent">
+                    <!--用户的基本信息这里看-->
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="info-table">
+                        <div class="row p-5">
+                            <div class="col-lg-6 col-12">姓名：[[${user.nick}]]</div>
+                            <div class="col-lg-6 col-12">系别：[[${user.userdepartment}]]</div>
+                            <div class="col-12">学号：[[${user.username}]]</div>
+                            <div class="col-12">密码：<span contenteditable="true" id="password">[[${user.password}]]</span> <small class="ml-4"><i class="fa fa-pencil fa-fw" ></i></small></div>
+                            <div class="col-12">地址：<span contenteditable="true" id="address">[[${user.address}]]</span> <small class="ml-4"><i class="fa fa-pencil fa-fw" ></i></small></div>
+                            <div class="col-12">温度：<span contenteditable="true" id="temperature">[[${user.temperature}]]</span> <small class="ml-4"><i class="fa fa-pencil fa-fw" ></i></small></div>
+                            <div class="col-12">通知邮箱：<span contenteditable="true" id="email">[[${user.email}]]</span> <small class="ml-4"><i class="fa fa-pencil fa-fw" ></i></small></div>
+                            <div class="col-12">寝室号：<span contenteditable="true" id="dormitory">[[${user.dormitory}]]</span> <small class="ml-4"><i class="fa fa-pencil fa-fw" ></i></small></div>
+                            <div class="col-12">公寓：
+                                <select id="apartment">
+                                    <option value="雪峰校区1#公寓" th:selected="${user.apartment} == '雪峰校区1#公寓'">雪峰校区1#公寓</option>
+                                    <option value="雪峰校区2#公寓" th:selected="${user.apartment} == '雪峰校区2#公寓'">雪峰校区2#公寓</option>
+                                    <option value="雪峰校区3#公寓" th:selected="${user.apartment} == '雪峰校区3#公寓'">雪峰校区3#公寓</option>
+                                    <option value="雪峰校区4#公寓" th:selected="${user.apartment} == '雪峰校区4#公寓'">雪峰校区4#公寓</option>
+                                    <option value="雪峰校区5#公寓" th:selected="${user.apartment} == '雪峰校区5#公寓'">雪峰校区5#公寓</option>
+                                    <option value="雪峰校区6#公寓" th:selected="${user.apartment} == '雪峰校区6#公寓'">雪峰校区6#公寓</option>
+                                    <option value="东坝校区男生公寓" th:selected="${user.apartment} == '东坝校区男生公寓'">东坝校区男生公寓</option>
+                                    <option value="东坝校区女生公寓" th:selected="${user.apartment} == '东坝校区女生公寓'">东坝校区女生公寓</option>
+                                </select>
+                            </div>
+                            <div class="col-12">开启自动签到：<input type="checkbox" id="auto" th:checked="${user.auto} == 1"></div>
+                            <div class="col-12"> <small class="text-warning">以上信息不能有一项为空<br>密码请不要随意修改,这个密码是对应学校的密码，这里修改了会导致无法签到</small></div>
+                            <div class="col-12 p-5">
+                                <button class="btn btn-sm btn-primary w-100" onclick="submit();">更新信息</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--用户的签到信息这里看-->
+                    <div class="tab-pane fade"  id="info" role="tabpanel" aria-labelledby="log-table">
+                        <div class="row log-row justify-content-center align-items-center h-100">
+                            <div class="col-12 log-content">
+                                <p class="text-center" id="loadding"><i class="fa fa-spinner fa-pulse fa-3x fa-fw" aria-hidden="true"></i></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            $("#loadding").show();
+        })();
+        
+        function submit() {
+            console.log("提交数据");
+            var password = $("#password").text();
+            var address = $("#address").text();
+            var temperature = $("#temperature").text();
+            var email = $("#email").text();
+            var dormitory = $("#dormitory").text();
+            var apartment = $("#apartment").val();
+            var auto = $("#auto").is(":checked")?1:0;
+            $.post("/updateUser",{
+                'password':password,
+                'address':address,
+                'temperature':temperature,
+                'email':email,
+                'dormitory':dormitory,
+                'apartment':apartment,
+                'auto':auto,
+            },function (data,status) {
+                if (status == "success"){
+                    alert(data);
+                } else{
+                    alert("请求失败！！！");
+                }
+            });
+
+            console.log(password+address+temperature+email+dormitory+apartment+auto);
+        }
+        function update_controller() {
+            $("#loadding").show();//显示加载圈
+            $("#mtable").remove();//将表格移除，待会重新加载
+            $(".log-row").addClass("justify-content-center");//添加类
+            $(".log-row").addClass("align-items-center");//添加类
+        }
+        //ajax获取信息
+        function info_get() {
+            $("#loadding").show();
+            $.post("/getLog",function (data,status) {
+                $("#loadding").hide();
+                $(".log-row").removeClass("justify-content-center");//添加类
+                $(".log-row").removeClass("align-items-center");//添加类
+                if (status != "success"){
+                    alert("请求失败！！！请重试");
+                    return;
+                }
+
+
+                var table = $("<table class='table text-center' id='mtable'>" +
+                        "<thead>" +
+                            "<tr>" +
+                                "<td>日期</td>" +
+                                "<td>6点签到</td>" +
+                                "<td>12点签到</td>" +
+                            "</tr>" +
+                        "</thead>" +
+                    "</table>");
+
+                var tbody = $("<tbody></tbody>");
+                for (var i = 0; i < data.length;i++){
+                    var tr = $("<tr></tr>");
+                    var datum = data[i];
+                    var day = datum["day"];
+                    var six_t = datum["clock_six"] == 1 ?"<span class='badge badge-success'>已签到</span>":"<span class='badge badge-danger'>未签到</span>";
+                    var twelve_t = datum["clock_twelve"] == 1 ?"<span class='badge badge-success'>已签到</span>":"<span class='badge badge-danger'>未签到</span>";
+
+                    $(tr).append($("<td>"+day+"</td>"));
+                    $(tr).append($("<td>"+six_t+"</td>"));
+                    $(tr).append($("<td>"+twelve_t+"</td>"));
+                    $(tbody).append($(tr));
+                }
+                $(table).append($(tbody));
+                $(".log-content").html(table);//log容器类
+            })
+        }
+    </script>
+</body>
+</html>
