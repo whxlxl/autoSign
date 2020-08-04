@@ -1,18 +1,4 @@
-/*
- Navicat Premium Data Transfer
 
- Source Server         : 阿里云
- Source Server Type    : MySQL
- Source Server Version : 80018
- Source Host           : 123.57.222.41:3306
- Source Schema         : autocampus
-
- Target Server Type    : MySQL
- Target Server Version : 80018
- File Encoding         : 65001
-
- Date: 28/07/2020 08:17:03
-*/
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
